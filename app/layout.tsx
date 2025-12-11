@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BotIdProvider } from "botid";
+import { BotIdClient } from "botid/client";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,10 +14,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <BotIdClient
+          protect={[
+            {
+              path: "/api/check-bot",
+              method: "POST",
+            },
+          ]}
+        />
+      </head>
       <body>
-        <BotIdProvider protectedRoutes={["/api/check-bot"]}>
-          {children}
-        </BotIdProvider>
+        {children}
       </body>
     </html>
   );

@@ -1,16 +1,16 @@
-import { checkBotId } from "botid";
-import { NextRequest, NextResponse } from "next/server";
+import { checkBotId } from "botid/server";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
-    const result = await checkBotId(request);
+    const { isBot } = await checkBotId();
 
     return NextResponse.json({
-      isBot: !result.verified,
-      verified: result.verified,
-      message: result.verified
-        ? "You appear to be human!"
-        : "Bot detected!",
+      isBot: isBot,
+      verified: !isBot,
+      message: isBot
+        ? "Bot detected!"
+        : "You appear to be human!",
     });
   } catch (error) {
     console.error("BotID check error:", error);
