@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type BotCheckResult = {
   isBot: boolean | null;
@@ -10,28 +10,29 @@ type BotCheckResult = {
 
 export default function Home() {
   const [result, setResult] = useState<BotCheckResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const checkBot = async () => {
-    setLoading(true);
-    setResult(null);
+  useEffect(() => {
+    const checkBot = async () => {
+      try {
+        const response = await fetch("/api/check-bot", {
+          method: "POST",
+        });
+        const data = await response.json();
+        setResult(data);
+      } catch (error) {
+        setResult({
+          isBot: null,
+          verified: null,
+          message: "Failed to check - " + String(error),
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    try {
-      const response = await fetch("/api/check-bot", {
-        method: "POST",
-      });
-      const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      setResult({
-        isBot: null,
-        verified: null,
-        message: "Failed to check - " + String(error),
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    checkBot();
+  }, []);
 
   return (
     <main className="container">
@@ -40,9 +41,12 @@ export default function Home() {
         Powered by <a href="https://www.kasada.io/" target="_blank" rel="noopener">Kasada</a> via <a href="https://vercel.com/docs/botid" target="_blank" rel="noopener">Vercel BotID</a>
       </p>
 
-      <button onClick={checkBot} disabled={loading} className="check-button">
-        {loading ? "Checking..." : "Check Me"}
-      </button>
+      {loading && (
+        <div className="loading">
+          <div className="spinner"></div>
+          <p>Analyzing...</p>
+        </div>
+      )}
 
       {result && (
         <div className={`result ${result.isBot === true ? "bot" : result.isBot === false ? "human" : "error"}`}>
