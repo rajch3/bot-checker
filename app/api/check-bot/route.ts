@@ -1,4 +1,4 @@
-import { checkBotId } from "@vercel/botid";
+import { checkBotId } from "botid";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {

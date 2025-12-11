@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
+import { withBotId } from "botid/next/config";
 
 const nextConfig: NextConfig = {
-  // BotID works out of the box on Vercel
+  // Your config here
 };
 
-export default nextConfig;
+export default withBotId(nextConfig);

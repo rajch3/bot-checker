@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BotIdProvider } from "@vercel/botid";
+import { BotIdProvider } from "botid";
 import "./globals.css";
 
 export const metadata: Metadata = {
